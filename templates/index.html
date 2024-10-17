@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1>Welcome to the Hobby Sharing Platform</h1>
+
+    <h2>All Posts</h2>
+    <ul class="list-group">
+        {% for post in posts %}
+            <li class="list-group-item">
+                <h3>{{ post.title }} by {{ post.author }}</h3>
+                <p>{{ post.content }}</p>
+                
+                {% if post.media %}
+                    <img src="{{ url_for('static', filename=post.media) }}" alt="Post media" style="max-width: 200px;">
+                {% endif %}
+
+                <!-- Like Button -->
+                <a href="{{ url_for('like_post', post_id=post.id) }}" class="btn btn-secondary">Like</a>
+
+                <!-- Display likes (only for the post author) -->
+                {% if current_user.username == post.author %}
+                    <p>Liked by: {{ likes.get(post.id, []) }}</p>
+                {% endif %}
+            </li>
+        {% else %}
+            <li class="list-group-item">No posts available yet. Be the first to create a post!</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
